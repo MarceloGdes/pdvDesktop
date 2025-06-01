@@ -15,7 +15,7 @@ import model.Cliente;
  *
  * @author Marcelo
  */
-public class ClienteDAO extends GenericDao<Cliente> {
+public class ClienteDAO extends GenericDAO<Cliente> {
 
     @Override
     protected Cliente construirObjeto(ResultSet rs) {

@@ -17,11 +17,11 @@ import java.util.logging.Logger;
  *
  * @author Marcelo
  */
-public abstract class GenericDao<Objeto> {
+public abstract class GenericDAO<Objeto> {
     
     public Connection conn = null;
 
-    public GenericDao() {
+    public GenericDAO() {
         conn = ConexaoPostgres.getConnection();
     }
     
@@ -47,7 +47,7 @@ public abstract class GenericDao<Objeto> {
             
             ps.close();
         }catch (SQLException ex) {
-            Logger.getLogger(GenericDao.class.getName())
+            Logger.getLogger(GenericDAO.class.getName())
                     .log(Level.SEVERE, null, ex);
             
         }
@@ -78,7 +78,7 @@ public abstract class GenericDao<Objeto> {
             ps.close();
             
         }catch (SQLException ex) {
-            Logger.getLogger(GenericDao.class.getName())
+            Logger.getLogger(GenericDAO.class.getName())
                     .log(Level.SEVERE, null, ex);
         }
         
