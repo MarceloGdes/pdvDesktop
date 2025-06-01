@@ -19,19 +19,19 @@ public class ItemVenda {
 
     private BigDecimal valorTotal;
 
-    private Venda venda;
+    private Integer vendaId;
 
     private Produto produto;
 
     public ItemVenda() {
     }
 
-    public ItemVenda(Integer id, Integer quantidade, BigDecimal valorUnitario, BigDecimal valorTotal, Venda venda, Produto produto) {
+    public ItemVenda(Integer id, Integer quantidade, BigDecimal valorUnitario, BigDecimal valorTotal, Integer venda, Produto produto) {
         this.id = id;
         this.quantidade = quantidade;
         this.valorUnitario = valorUnitario;
         this.valorTotal = valorTotal;
-        this.venda = venda;
+        this.vendaId = venda;
         this.produto = produto;
     }
 
@@ -67,12 +67,12 @@ public class ItemVenda {
         this.valorTotal = valorTotal;
     }
 
-    public Venda getVenda() {
-        return venda;
+    public Integer getVendaId() {
+        return vendaId;
     }
 
-    public void setVenda(Venda venda) {
-        this.venda = venda;
+    public void setVendaId(Integer vendaId) {
+        this.vendaId = vendaId;
     }
 
     public Produto getProduto() {

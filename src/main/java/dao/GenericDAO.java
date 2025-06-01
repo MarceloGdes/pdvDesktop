@@ -85,5 +85,21 @@ public abstract class GenericDAO<Objeto> {
         return obj;
     }
     
-    
+    public void excluir(int id, String tabela, String chavePrimaria){
+        PreparedStatement ps;
+
+        try{
+            ps = conn.prepareStatement(
+                    "DELETE FROM public.\""+tabela+"\" " +
+                            "WHERE \""+chavePrimaria+"\"=?"
+            );
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+        }catch (SQLException ex) {
+            Logger.getLogger(GenericDAO.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+    }
 }

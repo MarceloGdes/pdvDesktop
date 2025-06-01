@@ -6,6 +6,7 @@ package model;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
 
 /**
  *
@@ -22,15 +23,19 @@ public class Venda {
 
     private Cliente cliente;
 
+    private List<ItemVenda> itensVenda;
+
     public Venda() {
     }
 
-    public Venda(Integer id, String observacao, Date data, BigDecimal total, Cliente cliente) {
+    public Venda(Integer id, String observacao, Date data, BigDecimal total, Cliente cliente,
+                 List<ItemVenda> itensVenda) {
         this.id = id;
         this.observacao = observacao;
         this.data = data;
         this.total = total;
         this.cliente = cliente;
+        this.itensVenda = itensVenda;
     }
 
     public Integer getId() {
@@ -72,6 +77,12 @@ public class Venda {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-    
-    
+
+    public List<ItemVenda> getItensVenda() {
+        return itensVenda;
+    }
+
+    public void setItensVenda(List<ItemVenda> itensVenda) {
+        this.itensVenda = itensVenda;
+    }
 }
