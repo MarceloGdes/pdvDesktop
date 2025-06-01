@@ -27,9 +27,9 @@ public abstract class GenericDao<Objeto> {
     
     protected abstract Objeto construirObjeto(ResultSet rs);
     
-    public abstract boolean salvar(Object obj);
+    public abstract boolean salvar(Objeto obj);
     
-    public abstract boolean atualizar(Object obj);
+    public abstract boolean atualizar(Objeto obj);
     
     public ArrayList<Objeto> retornarLista(String sql){
         
