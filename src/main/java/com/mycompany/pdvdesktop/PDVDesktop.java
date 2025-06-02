@@ -4,6 +4,8 @@
 
 package com.mycompany.pdvdesktop;
 
+import javax.swing.JFrame;
+import view.ViewPrincipal;
 /**
  *
  * @author Marlene Juliana
@@ -11,6 +13,8 @@ package com.mycompany.pdvdesktop;
 public class PDVDesktop {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        ViewPrincipal view = new ViewPrincipal();
+        view.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        view.setVisible(true);       
     }
 }

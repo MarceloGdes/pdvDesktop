@@ -24,9 +24,9 @@ public class ClienteDAO extends GenericDAO<Cliente> {
         try{
            cliente = new Cliente();
            cliente.setId(rs.getInt("id"));
-           cliente.setEmail("nome");
-           cliente.setEmail("email");
-           cliente.setTelefone("telefone");
+           cliente.setNome(rs.getString("nome"));
+           cliente.setEmail(rs.getString("email"));
+           cliente.setTelefone(rs.getString("telefone"));
             
         }catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName())

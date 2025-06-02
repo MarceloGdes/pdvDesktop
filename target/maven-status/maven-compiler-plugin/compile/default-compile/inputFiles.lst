@@ -1,6 +1,14 @@
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\com\mycompany\pdvdesktop\PDVDesktop.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\conexaoDB\ConexaoPostgres.java
-C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\GenericDao.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\ClienteDAO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\GenericDAO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\ItemVendaDAO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\ProdutoDAO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\VendaDAO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\model\Cliente.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\model\ItemVenda.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\model\Produto.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\model\Venda.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\relatorios\GerarRelatorio.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\view\Cadastrodevenda.java
-C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\view\PDVDescktop.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\view\ViewPrincipal.java
