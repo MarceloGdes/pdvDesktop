@@ -71,12 +71,16 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(TabelaCliente);
 
+        btnGerarRelatorioDetalhado.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnGerarRelatorioDetalhado.setText("Gerar Relatório Detalhado");
 
+        btnGerarRelatorioVenda.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnGerarRelatorioVenda.setText("Gerar Relatório Vendas");
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setText("Data de Lançamento Inicial");
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Data de lançamento final");
 
         jFormattedTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -85,6 +89,7 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
             }
         });
 
+        btnFiltrar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnFiltrar.setText("Filtrar");
         btnFiltrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -120,7 +125,7 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(23, Short.MAX_VALUE)
+                .addContainerGap(11, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
