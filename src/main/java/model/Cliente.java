@@ -21,6 +21,13 @@ public class Cliente {
     public Cliente() {
     }
 
+    public Cliente(ClienteDTO dto){
+        this.id = dto.getId();
+        this.nome = dto.getNome();
+        this.telefone = dto.getTelefone();
+        this.email = dto.getEmail();
+    }
+
     public Cliente(Integer id, String nome, String telefone, String email) {
         this.id = id;
         this.nome = nome;
