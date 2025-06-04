@@ -22,6 +22,13 @@ public class Produto {
     public Produto() {
     }
 
+    public Produto(ProdutoDto dto){
+        this.id = dto.getId();
+        this.descricao = dto.getDescricao();
+        this.valor = dto.getValor();
+        this.categoria = dto.getCategoria();
+    }
+
     public Produto(Integer id, String descricao, BigDecimal valor, String categoria) {
         this.id = id;
         this.descricao = descricao;
