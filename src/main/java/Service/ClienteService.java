@@ -7,6 +7,7 @@ package Service;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import dto.ClienteDTO;
+import exceptions.ApiRequestException;
 import model.Cliente;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,15 +28,23 @@ public class ClienteService {
     private static String BASE_URL = "http://localhost:8080/clientes";
     private static int SUCESSO = 200;
     private static int CREATED = 201;
+    private static int NOT_FOUND = 404;
+    private static int BAD_REQUEST = 400;
 
-    public static List<Cliente> findAll(String nome) throws Exception {
+    public static List<Cliente> findAll(String nome) throws ApiRequestException, Exception {
         try {
-            String urlString = nome == null || nome.isBlank() ? BASE_URL : BASE_URL + "?nome=" + nome;
+            String urlString = nome == null || nome.isBlank() 
+                    ? BASE_URL 
+                    : BASE_URL + "?nome=" + URLEncoder.encode(nome, "UTF-8"); // URL Encoder utilizado para não quebrar a URL de requisição quando a string das variaveis tiverem espacos.
             URL url = new URL(urlString);
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestMethod("GET");
 
             if (conexao.getResponseCode() != SUCESSO) {
+                if(conexao.getResponseCode() == NOT_FOUND){
+                    throw new ApiRequestException(NOT_FOUND, "Nenhum cliente encontrado");
+                }
+                
                 throw new RuntimeException("Erro ao conectar: " + conexao.getResponseMessage());
             }
 
@@ -48,7 +58,10 @@ public class ClienteService {
             conexao.disconnect();
             return listaClientes;
 
-        } catch (Exception e) {
+        } catch(ApiRequestException e){
+            throw e;
+            
+        }catch (Exception e) {
             throw new Exception("Erro ao retornar clientes: " + e);
         }
     }
@@ -79,7 +92,8 @@ public class ClienteService {
 
             conexao.disconnect();
             return cliente;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new Exception("Erro ao inserir cliente: " + e);
         }
     }

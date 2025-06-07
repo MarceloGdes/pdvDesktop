@@ -4,6 +4,7 @@
  */
 package model;
 
+import dto.ProdutoDto;
 import java.math.BigDecimal;
 
 /**

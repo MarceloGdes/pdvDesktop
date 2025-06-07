@@ -4,19 +4,30 @@
  */
 package view;
 
+import Service.ClienteService;
+import Service.ProdutoService;
+import exceptions.ApiRequestException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import model.Cliente;
+import model.Produto;
+import model.Venda;
+
 /**
  *
  * @author Marlene Juliana
  */
 public class ViewLancarVenda extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Cadastrodevenda
-     */
+    private Venda venda;
     public ViewLancarVenda() {
         initComponents();
+        
+        venda = new Venda();
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -24,45 +35,47 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         SelecioneCliente = new javax.swing.JLabel();
         SelecioneProduto = new javax.swing.JLabel();
         Quantidade = new javax.swing.JLabel();
-        txtQuantidade = new javax.swing.JTextField();
+        tfQuantidade = new javax.swing.JTextField();
         txtTelaVendas = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        TabelaDeProdutos = new javax.swing.JTable();
+        tbProdutos = new javax.swing.JTable();
         btnAdicionarItem = new javax.swing.JButton();
         Telefone = new javax.swing.JLabel();
-        txtTelefone = new javax.swing.JTextField();
+        tfTelefone = new javax.swing.JTextField();
         ValorTotal = new javax.swing.JLabel();
         txtValorTotal = new javax.swing.JTextField();
         Observacao = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        txtObservacao = new javax.swing.JTextArea();
+        taObservacao = new javax.swing.JTextArea();
         btnFinalizarVenda = new javax.swing.JButton();
-        txtselecionarCliente = new javax.swing.JTextField();
-        txtSelecioneProduto = new javax.swing.JTextField();
+        tfSelecionarCliente = new javax.swing.JTextField();
+        tfSelecionarProduto = new javax.swing.JTextField();
         Email = new javax.swing.JLabel();
-        txtEmail = new javax.swing.JTextField();
+        tfEmail = new javax.swing.JTextField();
+        jSeparator1 = new javax.swing.JSeparator();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         SelecioneCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        SelecioneCliente.setText("Selecione o Cliente");
+        SelecioneCliente.setText("Cliente");
 
         SelecioneProduto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        SelecioneProduto.setText("Selecione o Produto");
+        SelecioneProduto.setText("Produto");
 
         Quantidade.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        Quantidade.setText("Quantidade");
+        Quantidade.setText("Qtd");
 
-        txtQuantidade.addActionListener(new java.awt.event.ActionListener() {
+        tfQuantidade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtQuantidadeActionPerformed(evt);
+                tfQuantidadeActionPerformed(evt);
             }
         });
 
         txtTelaVendas.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        txtTelaVendas.setText("                                      Tela de vendas");
+        txtTelaVendas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtTelaVendas.setText("Lançar Venda");
 
-        TabelaDeProdutos.setModel(new javax.swing.table.DefaultTableModel(
+        tbProdutos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -73,7 +86,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
                 "Produtos", "Quantidade", "Valor Unitario", "Valor total"
             }
         ));
-        jScrollPane2.setViewportView(TabelaDeProdutos);
+        jScrollPane2.setViewportView(tbProdutos);
 
         btnAdicionarItem.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAdicionarItem.setText("Adicionar Item  ");
@@ -86,9 +99,12 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         Telefone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Telefone.setText("Telefone");
 
-        ValorTotal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        ValorTotal.setText("Valor Total =");
+        tfTelefone.setEditable(false);
 
+        ValorTotal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        ValorTotal.setText("Valor Total");
+
+        txtValorTotal.setEditable(false);
         txtValorTotal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtValorTotalActionPerformed(evt);
@@ -98,9 +114,9 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         Observacao.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Observacao.setText("Observação");
 
-        txtObservacao.setColumns(20);
-        txtObservacao.setRows(5);
-        jScrollPane3.setViewportView(txtObservacao);
+        taObservacao.setColumns(20);
+        taObservacao.setRows(5);
+        jScrollPane3.setViewportView(taObservacao);
 
         btnFinalizarVenda.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnFinalizarVenda.setText("Finalizar Venda");
@@ -110,24 +126,35 @@ public class ViewLancarVenda extends javax.swing.JFrame {
             }
         });
 
-        txtselecionarCliente.addActionListener(new java.awt.event.ActionListener() {
+        tfSelecionarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtselecionarClienteActionPerformed(evt);
+                tfSelecionarClienteActionPerformed(evt);
+            }
+        });
+        tfSelecionarCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tfSelecionarClienteKeyPressed(evt);
             }
         });
 
-        txtSelecioneProduto.addActionListener(new java.awt.event.ActionListener() {
+        tfSelecionarProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSelecioneProdutoActionPerformed(evt);
+                tfSelecionarProdutoActionPerformed(evt);
+            }
+        });
+        tfSelecionarProduto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tfSelecionarProdutoKeyPressed(evt);
             }
         });
 
         Email.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Email.setText("E-mail");
 
-        txtEmail.addActionListener(new java.awt.event.ActionListener() {
+        tfEmail.setEditable(false);
+        tfEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEmailActionPerformed(evt);
+                tfEmailActionPerformed(evt);
             }
         });
 
@@ -136,45 +163,44 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
+                    .addComponent(txtTelaVendas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(txtTelaVendas, javax.swing.GroupLayout.PREFERRED_SIZE, 593, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
+                        .addComponent(jScrollPane3)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnFinalizarVenda, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                            .addComponent(txtValorTotal)
+                            .addComponent(ValorTotal)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(SelecioneCliente)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfSelecionarCliente))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(Telefone)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(Email, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfEmail))
+                    .addComponent(jScrollPane2)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(Observacao, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(181, 181, 181)
-                                .addComponent(ValorTotal)
-                                .addGap(263, 263, 263))
+                            .addComponent(Observacao, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(SelecioneCliente)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtselecionarCliente))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(Telefone)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(31, 31, 31)
-                                        .addComponent(Email, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtEmail))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(txtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE))
+                                .addComponent(SelecioneProduto)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tfSelecionarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(SelecioneProduto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtQuantidade)
-                                    .addComponent(txtSelecioneProduto)
-                                    .addComponent(btnFinalizarVenda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnAdicionarItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(Quantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addComponent(Quantidade)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnAdicionarItem)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
@@ -185,45 +211,46 @@ public class ViewLancarVenda extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SelecioneCliente)
-                    .addComponent(txtselecionarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfSelecionarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Telefone)
-                    .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Email)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                    .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(SelecioneProduto)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSelecioneProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Quantidade)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnAdicionarItem)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfSelecionarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAdicionarItem)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(Quantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(Observacao)
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ValorTotal)
-                            .addComponent(txtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Observacao))
+                        .addComponent(ValorTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnFinalizarVenda, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                        .addComponent(txtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnFinalizarVenda, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtQuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQuantidadeActionPerformed
+    private void tfQuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfQuantidadeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtQuantidadeActionPerformed
+    }//GEN-LAST:event_tfQuantidadeActionPerformed
 
     private void btnAdicionarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarItemActionPerformed
         // TODO add your handling code here:
@@ -237,55 +264,80 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnFinalizarVendaActionPerformed
 
-    private void txtselecionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtselecionarClienteActionPerformed
+    private void tfSelecionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfSelecionarClienteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtselecionarClienteActionPerformed
+    }//GEN-LAST:event_tfSelecionarClienteActionPerformed
 
-    private void txtSelecioneProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSelecioneProdutoActionPerformed
+    private void tfSelecionarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfSelecionarProdutoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtSelecioneProdutoActionPerformed
+    }//GEN-LAST:event_tfSelecionarProdutoActionPerformed
 
-    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
+    private void tfEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfEmailActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtEmailActionPerformed
+    }//GEN-LAST:event_tfEmailActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+    private void tfSelecionarClienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfSelecionarClienteKeyPressed
+        // Código de busca de clientes
+        
+        if(evt.getKeyCode() == evt.VK_ENTER){
+            try{
+                List<Cliente> clientes = ClienteService
+                        .findAll(tfSelecionarCliente.getText());
+                
+                ViewListarClientes viewListarClientes = new ViewListarClientes(clientes, this);
+                viewListarClientes.setLocationRelativeTo(this);
+                viewListarClientes.setVisible(true);
+            
+            }catch (ApiRequestException ex) {
+                JOptionPane.showMessageDialog(this, 
+                        ex.getMessage(),
+                        "Atenção!",
+                        JOptionPane.WARNING_MESSAGE);
+                
+            }catch (Exception ex) {
+                Logger.getLogger(this.getClass().getName())
+                        .log(Level.SEVERE, null, ex);
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ViewLancarVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewLancarVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ViewLancarVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ViewLancarVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
+    }//GEN-LAST:event_tfSelecionarClienteKeyPressed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ViewLancarVenda().setVisible(true);
+    private void tfSelecionarProdutoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfSelecionarProdutoKeyPressed
+        // Código de busca de clientes
+        
+        if(evt.getKeyCode() == evt.VK_ENTER){
+            try{
+                List<Produto> produtos = ProdutoService
+                        .findAll(tfSelecionarProduto.getText());
+                
+                ViewListarProdutos viewListarProdutos = new ViewListarProdutos(produtos, this);
+                viewListarProdutos.setLocationRelativeTo(this);
+                viewListarProdutos.setVisible(true);
+            
+            }catch (ApiRequestException ex) {
+                JOptionPane.showMessageDialog(this, 
+                        ex.getMessage(),
+                        "Atenção!",
+                        JOptionPane.WARNING_MESSAGE);
+                
+            }catch (Exception ex) {
+                Logger.getLogger(this.getClass().getName())
+                        .log(Level.SEVERE, null, ex);
             }
-        });
+        }
+    }//GEN-LAST:event_tfSelecionarProdutoKeyPressed
+    
+    public void preencherDadosCliente(Cliente cliente){
+        venda.setCliente(cliente);
+        
+        tfSelecionarCliente.setText(cliente.getId() + " - " + cliente.getNome());
+        tfTelefone.setText(cliente.getTelefone());
+        tfEmail.setText(cliente.getEmail());  
     }
+    
+    public void preencherDadosProdutos(Produto produto){
+          tfSelecionarProduto.setText(produto.getId() + " - " + produto.getDescricao());
+    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Email;
@@ -293,20 +345,21 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     private javax.swing.JLabel Quantidade;
     private javax.swing.JLabel SelecioneCliente;
     private javax.swing.JLabel SelecioneProduto;
-    private javax.swing.JTable TabelaDeProdutos;
     private javax.swing.JLabel Telefone;
     private javax.swing.JLabel ValorTotal;
     private javax.swing.JButton btnAdicionarItem;
     private javax.swing.JButton btnFinalizarVenda;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextArea txtObservacao;
-    private javax.swing.JTextField txtQuantidade;
-    private javax.swing.JTextField txtSelecioneProduto;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextArea taObservacao;
+    private javax.swing.JTable tbProdutos;
+    private javax.swing.JTextField tfEmail;
+    private javax.swing.JTextField tfQuantidade;
+    private javax.swing.JTextField tfSelecionarCliente;
+    private javax.swing.JTextField tfSelecionarProduto;
+    private javax.swing.JTextField tfTelefone;
     private javax.swing.JLabel txtTelaVendas;
-    private javax.swing.JTextField txtTelefone;
     private javax.swing.JTextField txtValorTotal;
-    private javax.swing.JTextField txtselecionarCliente;
     // End of variables declaration//GEN-END:variables
 }

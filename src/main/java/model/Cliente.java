@@ -4,6 +4,8 @@
  */
 package model;
 
+import dto.ClienteDTO;
+
 /**
  *
  * @author Marcelo

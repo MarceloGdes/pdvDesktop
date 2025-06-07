@@ -1,15 +1,22 @@
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\dao\GenericDAO.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\dao\ItemVendaDAO.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\model\Venda.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\model\Cliente.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\model\ItemVenda.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\com\mycompany\pdvdesktop\PDVDesktop.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\dao\ProdutoDAO.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\dao\ClienteDAO.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\view\ViewConsultarVendas.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\dao\VendaDAO.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\conexaoDB\ConexaoPostgres.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\view\ViewPrincipal.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\relatorios\GerarRelatorio.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\model\Produto.java
-C:\Users\Marlene Juliana\Documents\NetBeansProjects\Trabalho desktop\pdvDesktop\src\main\java\view\ViewLancarVenda.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\com\mycompany\pdvdesktop\PDVDesktop.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\conexaoDB\ConexaoPostgres.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\ClienteDAO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\GenericDAO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\ItemVendaDAO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\ProdutoDAO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\VendaDAO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dto\ClienteDTO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dto\ProdutoDto.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\exceptions\ApiRequestException.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\model\Cliente.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\model\ItemVenda.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\model\Produto.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\model\Venda.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\relatorios\GerarRelatorio.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\Service\ClienteService.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\Service\ProdutoService.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\view\ViewConsultarVendas.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\view\ViewLancarVenda.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\view\ViewListarClientes.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\view\ViewListarProdutos.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\view\ViewPrincipal.java
