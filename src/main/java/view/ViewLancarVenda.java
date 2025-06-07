@@ -8,6 +8,8 @@ import Service.ClienteService;
 import Service.ProdutoService;
 import exceptions.ApiRequestException;
 import exceptions.BusinessException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +29,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     private Venda venda;
     private ItemVenda itemVenda = null;
     private DefaultTableModel tableModel;
+    private int linhaSelecionada = -1;
     
     public ViewLancarVenda() {
         initComponents();
@@ -71,7 +74,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     private void atualizaGrid() {
         //Limpa a tabela
         
-        tbProdutos.removeAll();
+        tableModel.setRowCount(0);
         
         venda.getItensVenda().forEach(i -> {
             tableModel.addRow(new Object[]{
@@ -82,7 +85,16 @@ public class ViewLancarVenda extends javax.swing.JFrame {
                 i.getValorTotal()    
             });
         });
+        
+        venda.calcValorTotal();
+        tfValorTotal.setText("R$ " + venda.getTotal());
     } 
+    
+    private void limparCampos(){
+        tfQuantidade.setText("");
+        tfSelecionarProduto.setText("");
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -98,7 +110,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         Telefone = new javax.swing.JLabel();
         tfTelefone = new javax.swing.JTextField();
         ValorTotal = new javax.swing.JLabel();
-        txtValorTotal = new javax.swing.JTextField();
+        tfValorTotal = new javax.swing.JTextField();
         Observacao = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         taObservacao = new javax.swing.JTextArea();
@@ -166,10 +178,11 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         ValorTotal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         ValorTotal.setText("Valor Total");
 
-        txtValorTotal.setEditable(false);
-        txtValorTotal.addActionListener(new java.awt.event.ActionListener() {
+        tfValorTotal.setEditable(false);
+        tfValorTotal.setText("R$ 0.00");
+        tfValorTotal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtValorTotalActionPerformed(evt);
+                tfValorTotalActionPerformed(evt);
             }
         });
 
@@ -246,7 +259,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(btnFinalizarVenda, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                                    .addComponent(txtValorTotal)
+                                    .addComponent(tfValorTotal)
                                     .addComponent(ValorTotal)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(SelecioneCliente)
@@ -314,7 +327,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(ValorTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnFinalizarVenda, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -347,6 +360,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
             venda.getItensVenda().add(itemVenda);
             atualizaGrid();
             itemVenda = null;
+            limparCampos();
                 
         }catch (BusinessException ex) {
             JOptionPane.showMessageDialog(this, 
@@ -366,12 +380,39 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnAdicionarItemActionPerformed
 
-    private void txtValorTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtValorTotalActionPerformed
+    private void tfValorTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfValorTotalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtValorTotalActionPerformed
+    }//GEN-LAST:event_tfValorTotalActionPerformed
 
     private void btnFinalizarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarVendaActionPerformed
-        // TODO add your handling code here:
+        try {
+            if(venda.getCliente() == null)
+                throw new BusinessException("Você não selecionou um cliente.");
+            
+            if(venda.getItensVenda().isEmpty())
+                throw new BusinessException("Adicionei ao menos um item.");
+            
+            venda.setObservacao(taObservacao.getText());
+            
+            venda.setData(Date.valueOf(LocalDate.now()));
+                
+        }catch (BusinessException ex) {
+            JOptionPane.showMessageDialog(this, 
+                        ex.getMessage(), 
+                        "Atenção.", 
+                        JOptionPane.WARNING_MESSAGE);
+            
+        }catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName())
+                    .log(Level.SEVERE, null, ex);
+            
+            JOptionPane.showMessageDialog(this, 
+                        "Ocorre um erro.", 
+                        "Erro", 
+                        JOptionPane.ERROR_MESSAGE);
+        }
+            
+        
     }//GEN-LAST:event_btnFinalizarVendaActionPerformed
 
     private void tfSelecionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfSelecionarClienteActionPerformed
@@ -437,7 +478,26 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     }//GEN-LAST:event_tfSelecionarProdutoKeyPressed
 
     private void btnRemoverItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverItemActionPerformed
-        // TODO add your handling code here:
+        linhaSelecionada = tbProdutos.getSelectedRow();
+        
+        if(linhaSelecionada >= 0){
+            venda.getItensVenda().remove(linhaSelecionada);
+            
+            atualizaGrid();
+            
+            JOptionPane.showMessageDialog(this,
+                "Item removido com sucesso.",
+                "Remoção",
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            linhaSelecionada = -1;
+            
+        }else {
+            JOptionPane.showMessageDialog(this, 
+                    "Selecione um item da tabela.", 
+                    "Atenção", 
+                    JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnRemoverItemActionPerformed
     
     public void preencherDadosCliente(Cliente cliente){
@@ -478,8 +538,8 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     private javax.swing.JTextField tfSelecionarCliente;
     private javax.swing.JTextField tfSelecionarProduto;
     private javax.swing.JTextField tfTelefone;
+    private javax.swing.JTextField tfValorTotal;
     private javax.swing.JLabel txtTelaVendas;
-    private javax.swing.JTextField txtValorTotal;
     // End of variables declaration//GEN-END:variables
 
     

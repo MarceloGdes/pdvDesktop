@@ -39,6 +39,14 @@ public class Venda {
         this.cliente = cliente;
         this.itensVenda = itensVenda;
     }
+    
+    public void calcValorTotal(){
+        total = BigDecimal.ZERO;
+        
+        itensVenda.forEach(i -> {
+            total = total.add(i.getValorTotal());
+        });
+    }
 
     public Integer getId() {
         return id;
