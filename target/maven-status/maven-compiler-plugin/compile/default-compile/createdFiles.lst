@@ -9,6 +9,7 @@ view\ViewPrincipal$1.class
 com\mycompany\pdvdesktop\PDVDesktop.class
 exceptions\ApiRequestException.class
 view\ViewLancarVenda$9.class
+view\ViewLancarVenda$11.class
 view\ViewListarProdutos.class
 view\ViewConsultarVendas.class
 view\ViewLancarVenda$6.class
@@ -31,5 +32,7 @@ view\ViewLancarVenda$5.class
 view\ViewLancarVenda$4.class
 view\ViewListarClientes$2.class
 relatorios\GerarRelatorio.class
+exceptions\BusinessException.class
+view\ViewLancarVenda$10.class
 view\ViewLancarVenda$7.class
 view\ViewConsultarVendas$1.class

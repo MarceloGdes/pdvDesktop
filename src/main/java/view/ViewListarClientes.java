@@ -13,7 +13,7 @@ import model.Cliente;
  *
  * @author Marcelo
  */
-public class ViewListarClientes extends javax.swing.JFrame {
+  public class ViewListarClientes extends javax.swing.JFrame {
 
     private DefaultTableModel tableModel;
     private ViewLancarVenda viewLancarVenda;

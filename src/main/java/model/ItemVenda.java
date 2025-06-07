@@ -66,6 +66,10 @@ public class ItemVenda {
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
+    
+    public void calcValorTotal(){
+        valorTotal = valorUnitario.multiply(BigDecimal.valueOf(quantidade));
+    }
 
     public Integer getVendaId() {
         return vendaId;

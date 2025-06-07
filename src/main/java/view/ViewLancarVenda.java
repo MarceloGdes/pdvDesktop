@@ -7,11 +7,14 @@ package view;
 import Service.ClienteService;
 import Service.ProdutoService;
 import exceptions.ApiRequestException;
+import exceptions.BusinessException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import model.Cliente;
+import model.ItemVenda;
 import model.Produto;
 import model.Venda;
 
@@ -22,12 +25,64 @@ import model.Venda;
 public class ViewLancarVenda extends javax.swing.JFrame {
 
     private Venda venda;
+    private ItemVenda itemVenda = null;
+    private DefaultTableModel tableModel;
+    
     public ViewLancarVenda() {
         initComponents();
-        
         venda = new Venda();
+        carregarTabela();
     }
     
+    private void carregarTabela() {
+        tableModel = new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"id", "Produto", "Qtd", "Valor Un.", "Valor Tot."}
+        ){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        
+        tbProdutos.setModel(tableModel);
+        
+        tbProdutos.getColumnModel()
+                .getColumn(0)
+                .setPreferredWidth(1);
+        
+        tbProdutos.getColumnModel()
+                .getColumn(1)
+                .setPreferredWidth(300);
+        
+         tbProdutos.getColumnModel()
+                .getColumn(2)
+                .setPreferredWidth(1);
+         
+         tbProdutos.getColumnModel()
+                .getColumn(3)
+                .setPreferredWidth(20);
+         
+          tbProdutos.getColumnModel()
+                .getColumn(4)
+                .setPreferredWidth(20);
+    }
+    
+    private void atualizaGrid() {
+        //Limpa a tabela
+        
+        tbProdutos.removeAll();
+        
+        venda.getItensVenda().forEach(i -> {
+            tableModel.addRow(new Object[]{
+                i.getProduto().getId(),
+                i.getProduto().getDescricao(),
+                i.getQuantidade(),
+                i.getValorUnitario(),
+                i.getValorTotal()    
+            });
+        });
+    } 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -53,6 +108,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         Email = new javax.swing.JLabel();
         tfEmail = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
+        btnRemoverItem = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -87,6 +143,12 @@ public class ViewLancarVenda extends javax.swing.JFrame {
             }
         ));
         jScrollPane2.setViewportView(tbProdutos);
+        if (tbProdutos.getColumnModel().getColumnCount() > 0) {
+            tbProdutos.getColumnModel().getColumn(0).setPreferredWidth(300);
+            tbProdutos.getColumnModel().getColumn(1).setPreferredWidth(5);
+            tbProdutos.getColumnModel().getColumn(2).setPreferredWidth(20);
+            tbProdutos.getColumnModel().getColumn(3).setPreferredWidth(20);
+        }
 
         btnAdicionarItem.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAdicionarItem.setText("Adicionar Item  ");
@@ -158,49 +220,61 @@ public class ViewLancarVenda extends javax.swing.JFrame {
             }
         });
 
+        btnRemoverItem.setText("Remover Item");
+        btnRemoverItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverItemActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1)
-                    .addComponent(txtTelaVendas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnFinalizarVenda, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                            .addComponent(txtValorTotal)
-                            .addComponent(ValorTotal)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRemoverItem))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(SelecioneCliente)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfSelecionarCliente))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(Telefone)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(Email, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfEmail))
-                    .addComponent(jScrollPane2)
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Observacao, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSeparator1)
+                            .addComponent(txtTelaVendas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(SelecioneProduto)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tfSelecionarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane3)
                                 .addGap(18, 18, 18)
-                                .addComponent(Quantidade)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnFinalizarVenda, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                                    .addComponent(txtValorTotal)
+                                    .addComponent(ValorTotal)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(SelecioneCliente)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfSelecionarCliente))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(Telefone)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnAdicionarItem)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(Email, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfEmail))
+                            .addComponent(jScrollPane2)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(Observacao, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(SelecioneProduto)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tfSelecionarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(Quantidade)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tfQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnAdicionarItem)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
@@ -225,13 +299,15 @@ public class ViewLancarVenda extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(SelecioneProduto)
                         .addComponent(tfSelecionarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnAdicionarItem)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(Quantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tfQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tfQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAdicionarItem, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRemoverItem)
+                .addGap(7, 7, 7)
                 .addComponent(Observacao)
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -253,7 +329,41 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     }//GEN-LAST:event_tfQuantidadeActionPerformed
 
     private void btnAdicionarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarItemActionPerformed
-        // TODO add your handling code here:
+        try {
+            if(itemVenda == null)
+                throw new BusinessException("Você não selecionou um produto.");
+
+            if(tfQuantidade.getText() == null || tfQuantidade.getText().isBlank())
+                throw new BusinessException("Você não preencheu o campo de quantidade.");
+            
+            Integer quantidade = Integer.valueOf(tfQuantidade.getText());
+            
+            if(quantidade <= 0)
+                throw new BusinessException("A quantidade tem que ser maior que zero.");
+            
+            itemVenda.setQuantidade(quantidade);
+            itemVenda.calcValorTotal();
+            
+            venda.getItensVenda().add(itemVenda);
+            atualizaGrid();
+            itemVenda = null;
+                
+        }catch (BusinessException ex) {
+            JOptionPane.showMessageDialog(this, 
+                        ex.getMessage(), 
+                        "Atenção.", 
+                        JOptionPane.WARNING_MESSAGE);
+            
+        }catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName())
+                    .log(Level.SEVERE, null, ex);
+            
+            JOptionPane.showMessageDialog(this, 
+                        "Ocorre um erro.", 
+                        "Erro", 
+                        JOptionPane.ERROR_MESSAGE);
+        }
+        
     }//GEN-LAST:event_btnAdicionarItemActionPerformed
 
     private void txtValorTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtValorTotalActionPerformed
@@ -325,6 +435,10 @@ public class ViewLancarVenda extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_tfSelecionarProdutoKeyPressed
+
+    private void btnRemoverItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRemoverItemActionPerformed
     
     public void preencherDadosCliente(Cliente cliente){
         venda.setCliente(cliente);
@@ -336,6 +450,10 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     
     public void preencherDadosProdutos(Produto produto){
           tfSelecionarProduto.setText(produto.getId() + " - " + produto.getDescricao());
+          
+          itemVenda = new ItemVenda();
+          itemVenda.setProduto(produto);
+          itemVenda.setValorUnitario(produto.getValor());
     }
     
 
@@ -349,6 +467,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     private javax.swing.JLabel ValorTotal;
     private javax.swing.JButton btnAdicionarItem;
     private javax.swing.JButton btnFinalizarVenda;
+    private javax.swing.JButton btnRemoverItem;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
@@ -362,4 +481,8 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     private javax.swing.JLabel txtTelaVendas;
     private javax.swing.JTextField txtValorTotal;
     // End of variables declaration//GEN-END:variables
+
+    
+
+    
 }

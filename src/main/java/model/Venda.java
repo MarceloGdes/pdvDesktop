@@ -6,6 +6,7 @@ package model;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ public class Venda {
     private List<ItemVenda> itensVenda;
 
     public Venda() {
+        itensVenda = new ArrayList<>();
     }
 
     public Venda(Integer id, String observacao, Date data, BigDecimal total, Cliente cliente,
