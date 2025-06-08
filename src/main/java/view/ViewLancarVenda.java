@@ -84,13 +84,13 @@ public class ViewLancarVenda extends javax.swing.JFrame {
             //Limpa a tabela
             tableModel.setRowCount(0);
             
-            for (ItemVenda itemvenda : venda.getItensVenda()) {
+            for (ItemVenda iv : venda.getItensVenda()) {
                 tableModel.addRow(new Object[]{
-                    itemVenda.getProduto().getId(),
-                    itemVenda.getProduto().getDescricao(),
-                    itemVenda.getQuantidade(),
-                    "R$ " + itemVenda.getValorUnitario(),
-                    "R$ " + itemVenda.getValorTotal()                
+                    iv.getProduto().getId(),
+                    iv.getProduto().getDescricao(),
+                    iv.getQuantidade(),
+                    "R$ " + iv.getValorUnitario(),
+                    "R$ " + iv.getValorTotal()                
                 });
             }
             
