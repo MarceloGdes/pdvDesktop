@@ -38,56 +38,67 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     }
     
     private void carregarTabela() {
-        tableModel = new DefaultTableModel(
-                new Object[][]{},
-                new String[]{"id", "Produto", "Qtd", "Valor Un.", "Valor Tot."}
-        ){
-            @Override
-            public boolean isCellEditable(int row, int column){
-                return false;
-            }
-        };
-        
-        tbProdutos.setModel(tableModel);
-        
-        tbProdutos.getColumnModel()
-                .getColumn(0)
-                .setPreferredWidth(1);
-        
-        tbProdutos.getColumnModel()
-                .getColumn(1)
-                .setPreferredWidth(300);
-        
-         tbProdutos.getColumnModel()
-                .getColumn(2)
-                .setPreferredWidth(1);
-         
-         tbProdutos.getColumnModel()
-                .getColumn(3)
-                .setPreferredWidth(20);
-         
-          tbProdutos.getColumnModel()
-                .getColumn(4)
-                .setPreferredWidth(20);
+        try {
+            tableModel = new DefaultTableModel(
+                    new Object[][]{},
+                    new String[]{"id", "Produto", "Qtd", "Valor Un.", "Valor Tot."}
+            ) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+            
+            tbProdutos.setModel(tableModel);
+            
+            tbProdutos.getColumnModel()
+                    .getColumn(0)
+                    .setPreferredWidth(1);
+            
+            tbProdutos.getColumnModel()
+                    .getColumn(1)
+                    .setPreferredWidth(300);
+            
+            tbProdutos.getColumnModel()
+                    .getColumn(2)
+                    .setPreferredWidth(1);
+            
+            tbProdutos.getColumnModel()
+                    .getColumn(3)
+                    .setPreferredWidth(20);
+            
+            tbProdutos.getColumnModel()
+                    .getColumn(4)
+                    .setPreferredWidth(20);
+            
+        } catch (Exception e) {
+            Logger.getLogger(this.getName())
+                    .log(Level.SEVERE, null, e);
+        }
     }
     
     private void atualizaGrid() {
-        //Limpa a tabela
-        
-        tableModel.setRowCount(0);
-        
-        venda.getItensVenda().forEach(i -> {
-            tableModel.addRow(new Object[]{
-                i.getProduto().getId(),
-                i.getProduto().getDescricao(),
-                i.getQuantidade(),
-                i.getValorUnitario(),
-                i.getValorTotal()    
-            });
-        });
-        
-        venda.calcValorTotal();
-        tfValorTotal.setText("R$ " + venda.getTotal());
+        try {
+            //Limpa a tabela
+            tableModel.setRowCount(0);
+            
+            for (ItemVenda itemvenda : venda.getItensVenda()) {
+                tableModel.addRow(new Object[]{
+                    itemVenda.getProduto().getId(),
+                    itemVenda.getProduto().getDescricao(),
+                    itemVenda.getQuantidade(),
+                    "R$ " + itemVenda.getValorUnitario(),
+                    "R$ " + itemVenda.getValorTotal()                
+                });
+            }
+            
+            venda.calcValorTotal();
+            tfValorTotal.setText("R$ " + venda.getTotal());
+            
+        } catch (Exception e) {
+            Logger.getLogger(this.getName())
+                    .log(Level.SEVERE, null, e);
+        }
     } 
     
     private void limparCampos(){
@@ -395,6 +406,8 @@ public class ViewLancarVenda extends javax.swing.JFrame {
             venda.setObservacao(taObservacao.getText());
             
             venda.setData(Date.valueOf(LocalDate.now()));
+            
+            if(vendaDa)
                 
         }catch (BusinessException ex) {
             JOptionPane.showMessageDialog(this, 

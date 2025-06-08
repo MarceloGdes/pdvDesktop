@@ -4,10 +4,18 @@
  */
 package view;
 
+import dao.VendaDAO;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
+import model.Venda;
 
 /**
  *
@@ -15,39 +23,109 @@ import javax.swing.text.MaskFormatter;
  */
 public class ViewConsultarVendas extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ConsultarVendas
-     */
+    
+    private VendaDAO vendaDAO;
+    private List<Venda> vendas;
+    private DefaultTableModel tableModel;
+    
     public ViewConsultarVendas() {
         initComponents();
         configurarCamposData();
+        
+        vendaDAO = new VendaDAO();
+        
+        carregarTabela();
     }
-//codigo para o formato das datas dd/mm/yyyy
+    //codigo para o formato das datas dd/mm/yyyy
     private void configurarCamposData() {
     try {
         //mascara do formato padrão
-      MaskFormatter mascaraData = new MaskFormatter("##/##/####");
-      mascaraData.setPlaceholderCharacter('_'); 
-        
-      mascaraData.install(jFormattedTextField1);
+        MaskFormatter mascaraData = new MaskFormatter("##/##/####");
+        mascaraData.setPlaceholderCharacter('_'); 
+        mascaraData.install(jFormattedTextField1);
         
         MaskFormatter mascaraData2 = new MaskFormatter("##/##/####");
         mascaraData2.setPlaceholderCharacter('_');
         mascaraData2.install(jFormattedTextField2);
         
-    }   catch (ParseException ex) {
+    }catch (ParseException ex) {
         System.err.println("Erro ao adicionar data: " + ex.getMessage());
         }
      }
-  
     
+    private void carregarTabela() {
+        try {
+            tableModel = new DefaultTableModel(
+                    new Object[][]{},
+                    new String[]{"Id", "Nome Cliente", "Data", "Valor Total"}) {
+
+                //Adicionado para não deixar alterar as células da tabela        
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;                    
+                }
+            };
+            
+            tbVendas.setModel(tableModel);
+            
+            tbVendas.getColumnModel()
+                    .getColumn(0)
+                    .setPreferredWidth(1);
+            
+            tbVendas.getColumnModel()
+                    .getColumn(1)
+                    .setPreferredWidth(300);
+            
+            tbVendas.getColumnModel()
+                    .getColumn(2)
+                    .setPreferredWidth(50);
+            
+            tbVendas.getColumnModel()
+                    .getColumn(3)
+                    .setPreferredWidth(50);
+        } catch (Exception e) {
+            Logger.getLogger(this.getName())
+                    .log(Level.SEVERE, null, e);
+        }
+    }
+    
+    private void atualizaGrid(LocalDate dataIncial, LocalDate dataFinal) {
+        try {
+            //Utilizado os atributos atTime e atStartOfDay por causa que a coluna na tabela se trata de um timestamp.
+            //Sem esses atributos a conulta não retornaria itens no mesmo dia, com horas informadas (BETWEEN '2025-06-08 00:00:00' AND '2025-06-08 00:00:00')
+            String sql = "SELECT * FROM public.\"venda\" "
+                    + "WHERE \"data\" BETWEEN '" + dataIncial.atStartOfDay()
+                    + "' AND '" + dataFinal.atTime(23, 59, 59) + "'";
+            
+            List<Venda> vendas = vendaDAO.retornarLista(sql);
+
+            //Limpar a tabela
+            tableModel.setRowCount(0);
+
+            //Formatando a data do banco para o atributo DATE
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            
+            for (Venda venda : vendas) {
+                tableModel.addRow(new Object[]{
+                    venda.getId(),
+                    venda.getCliente().getNome(),
+                    formatter.format(venda.getData()),
+                    "R$ " + venda.getTotal()
+                });
+            }
+        } catch (Exception e) {
+            Logger.getLogger(this.getName())
+                    .log(Level.SEVERE, null, e);
+        }
+        
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        TabelaCliente = new javax.swing.JTable();
+        tbVendas = new javax.swing.JTable();
         btnGerarRelatorioDetalhado = new javax.swing.JButton();
         btnGerarRelatorioVenda = new javax.swing.JButton();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
@@ -58,7 +136,7 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        TabelaCliente.setModel(new javax.swing.table.DefaultTableModel(
+        tbVendas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -69,7 +147,13 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
                 "ID", "CLIENTE", "DATA DA VENDA", "VALOR TOTAL"
             }
         ));
-        jScrollPane1.setViewportView(TabelaCliente);
+        jScrollPane1.setViewportView(tbVendas);
+        if (tbVendas.getColumnModel().getColumnCount() > 0) {
+            tbVendas.getColumnModel().getColumn(0).setPreferredWidth(10);
+            tbVendas.getColumnModel().getColumn(1).setPreferredWidth(300);
+            tbVendas.getColumnModel().getColumn(2).setPreferredWidth(50);
+            tbVendas.getColumnModel().getColumn(3).setPreferredWidth(50);
+        }
 
         btnGerarRelatorioDetalhado.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnGerarRelatorioDetalhado.setText("Gerar Relatório Detalhado");
@@ -78,10 +162,10 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
         btnGerarRelatorioVenda.setText("Gerar Relatório Vendas");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel1.setText("Data de Lançamento Inicial");
+        jLabel1.setText("Dt. Lançamento Inicial");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setText("Data de lançamento final");
+        jLabel2.setText("Dt lançamento final");
 
         jFormattedTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -111,13 +195,13 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnGerarRelatorioDetalhado))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jFormattedTextField1))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jFormattedTextField2)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnFiltrar)))
                 .addContainerGap())
@@ -125,15 +209,15 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(11, Short.MAX_VALUE)
+                .addContainerGap(9, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel2))
+                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFiltrar))
+                    .addComponent(btnFiltrar)
+                    .addComponent(jLabel2)
+                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -152,19 +236,16 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
     String dataFinalStr = jFormattedTextField2.getText();
     
     try {
-        java.time.format.DateTimeFormatter formatter =
-        java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        java.time.LocalDate dataInicial = 
-        java.time.LocalDate.parse(dataInicialStr, formatter);
-        java.time.LocalDate dataFinal =
-        java.time.LocalDate.parse(dataFinalStr, formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         
-        System.out.println("Data Inicial: " + dataInicial);
-        System.out.println("Data Final: " + dataFinal);
+        LocalDate dataInicial = LocalDate.parse(dataInicialStr, formatter);
+        LocalDate dataFinal = LocalDate.parse(dataFinalStr, formatter);
+        
+        atualizaGrid(dataInicial, dataFinal);
         
      } catch (java.time.format.DateTimeParseException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Formato de data inválido. Use dd/MM/yyyy.", "Erro de Data", 
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Formato de data inválido. Use DD/MM/AAAA.", "Erro de Data", 
+                JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_btnFiltrarActionPerformed
 
@@ -172,46 +253,9 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jFormattedTextField2ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ViewConsultarVendas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewConsultarVendas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ViewConsultarVendas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ViewConsultarVendas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ViewConsultarVendas().setVisible(true);
-            }
-        });
-    }
+  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable TabelaCliente;
     private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnGerarRelatorioDetalhado;
     private javax.swing.JButton btnGerarRelatorioVenda;
@@ -220,5 +264,8 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tbVendas;
     // End of variables declaration//GEN-END:variables
+
+    
 }
