@@ -17,9 +17,9 @@ import java.util.logging.Logger;
  */
 public class ConexaoPostgres {
    private static final String DRIVER = "org.postgresql.Driver";
-    private static final String URL = "jdbc:postgresql://localhost:5432/pdvDesktop";
+    private static final String URL = "jdbc:postgresql://localhost:5433/pdvDesktop";
     private static final String USER = "postgres";
-    private static final String PASSWORD = "admin";
+    private static final String PASSWORD = "gtsnfe2010";
     
     public static Connection getConnection(){
         

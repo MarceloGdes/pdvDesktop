@@ -14,60 +14,37 @@ import java.util.logging.Logger;
 public class ItemVendaDAO extends GenericDAO<ItemVenda> {
     @Override
     protected ItemVenda construirObjeto(ResultSet rs) {
-        ItemVenda itemVenda = null;
-        Produto produto = null;
-
-        ProdutoDAO produtoDAO = new ProdutoDAO();
-
-        try{
-            itemVenda = new ItemVenda();
-
-            itemVenda.setId(rs.getInt("id"));
-            itemVenda.setQuantidade(rs.getInt("quantidade"));
-            itemVenda.setValorUnitario(rs.getBigDecimal("valor_unitario"));
-            itemVenda.setValorTotal(rs.getBigDecimal("valor_total"));
-            itemVenda.setVendaId(rs.getInt("venda_id"));
-
-            produto = produtoDAO.retornarPeloId(rs.getInt("id"), "produto", "id");
-
-            itemVenda.setProduto(produto);
-
-        }catch (SQLException ex){
-            Logger.getLogger(ItemVendaDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
+        ItemVenda item = new ItemVenda();
+        try {
+            item.setId(rs.getInt("id"));
+            item.setQuantidade(rs.getInt("quantidade"));
+            item.setValorUnitario(rs.getBigDecimal("valor_unitario"));
+            item.setValorTotal(rs.getBigDecimal("valor_total"));
+            item.setVendaId(rs.getInt("venda_id"));
+            ProdutoDAO produtoDAO = new ProdutoDAO();
+            Produto produto = produtoDAO.retornarPeloId(rs.getInt("produto_id"), "produto", "id");
+            item.setProduto(produto);
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemVendaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return itemVenda;
+        return item;
     }
 
     @Override
-    public boolean salvar(ItemVenda itemVenda) {
-        String sql = "INSERT INTO public.\"itemvenda\"(" +
-                "\"quantidade\", \"valor_unitario\", \"valor_total\", \"venda_id\", \"produto_id\") " +
-                "VALUES (?, ?, ?, ?, ?)";
-
-        PreparedStatement ps = null;
-
-        try{
-            ps = conn.prepareStatement(sql);
-
-            ps.setInt(1, itemVenda.getQuantidade());
-            ps.setBigDecimal(2, itemVenda.getValorUnitario());
-            ps.setBigDecimal(3, itemVenda.getValorTotal());
-            ps.setInt(4, itemVenda.getVendaId());
-            ps.setInt(5, itemVenda.getProduto().getId());
-
+    public boolean salvar(ItemVenda item) {
+        String sql = "INSERT INTO public.\"itemvenda\" (quantidade, valor_unitario, valor_total, venda_id, produto_id) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, item.getQuantidade());
+            ps.setBigDecimal(2, item.getValorUnitario());
+            ps.setBigDecimal(3, item.getValorTotal());
+            ps.setInt(4, item.getVendaId());
+            ps.setInt(5, item.getProduto().getId());
             ps.executeUpdate();
-            ps.close();
-
             return true;
-
-        }catch (SQLException ex){
-            Logger.getLogger(ItemVendaDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemVendaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
-
-        return false;
     }
 
     @Override
