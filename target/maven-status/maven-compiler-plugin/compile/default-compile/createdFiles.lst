@@ -1,5 +1,6 @@
 view\ViewLancarVenda$2.class
 view\ViewLancarVenda.class
+dto\VendaDto.class
 view\ViewConsultarVendas$2.class
 Service\ClienteService.class
 Service\ProdutoService.class
@@ -25,11 +26,14 @@ view\ViewListarProdutos$2.class
 view\ViewLancarVenda$8.class
 dao\VendaDAO.class
 dao\ProdutoDAO.class
+Service\VendaService$1.class
 view\ViewLancarVenda$1.class
+dto\ItemVendaDTO.class
 view\ViewConsultarVendas$3.class
 view\ViewPrincipal$2.class
 view\ViewLancarVenda$5.class
 view\ViewLancarVenda$4.class
+Service\VendaService.class
 view\ViewListarClientes$2.class
 relatorios\GerarRelatorio.class
 exceptions\BusinessException.class

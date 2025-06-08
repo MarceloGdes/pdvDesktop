@@ -4,6 +4,7 @@
  */
 package model;
 
+import dto.VendaDto;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -38,6 +39,12 @@ public class Venda {
         this.total = total;
         this.cliente = cliente;
         this.itensVenda = itensVenda;
+    }
+    
+    public Venda(VendaDto dto){
+        this.observacao = dto.getObservacao();
+        this.total = dto.getTotal();
+        this.data = dto.getData(); 
     }
     
     public void calcValorTotal(){

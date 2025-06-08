@@ -103,7 +103,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         }
     } 
     
-    private void limparCampos(){
+    private void limparCamposProduto(){
         tfQuantidade.setText("");
         tfSelecionarProduto.setText("");
     }
@@ -373,7 +373,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
             venda.getItensVenda().add(itemVenda);
             atualizaGrid();
             itemVenda = null;
-            limparCampos();
+            limparCamposProduto();
                 
         }catch (BusinessException ex) {
             JOptionPane.showMessageDialog(this, 
@@ -415,11 +415,13 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         vendaDto.setClienteId(venda.getCliente().getId());
         vendaDto.setItensVenda(venda.getItensVenda());
 
-        VendaService.insert(vendaDto);
+        Venda vendaCriada = VendaService.insert(vendaDto);
+        
+        
 
         venda = new Venda();
         atualizaGrid();
-        limparCampos();
+        limparCamposProduto();
         taObservacao.setText("");
         tfSelecionarCliente.setText("");
         tfTelefone.setText("");

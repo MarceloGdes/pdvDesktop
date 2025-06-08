@@ -48,19 +48,20 @@ public class VendaDAO extends GenericDAO<Venda>{
     @Override
     public boolean salvar(Venda venda) {
         String sql = "INSERT INTO public.\"venda\"(" +
-                "\"observacao\", \"data\", \"total\", \"cliente_id\") " +
-                "VALUES (?, ?, ?, ?)";
+                "\"id\", \"observacao\", \"data\", \"total\", \"cliente_id\") " +
+                "VALUES (?, ?, ?, ?, ?)";
 
         PreparedStatement ps = null;
         ItemVendaDAO itemVendaDAO = new ItemVendaDAO();
 
         try{
             ps = conn.prepareStatement(sql);
-
-            ps.setString(1, venda.getObservacao());
-            ps.setDate(2, venda.getData());
-            ps.setBigDecimal(3, venda.getTotal());
-            ps.setInt(4, venda.getCliente().getId());
+            
+            ps.setInt(1, venda.getId());
+            ps.setString(2, venda.getObservacao());
+            ps.setDate(3, venda.getData());
+            ps.setBigDecimal(4, venda.getTotal());
+            ps.setInt(5, venda.getCliente().getId());
 
             ps.executeUpdate();
 

@@ -6,7 +6,9 @@ C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\ja
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\ProdutoDAO.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dao\VendaDAO.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dto\ClienteDTO.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dto\ItemVendaDTO.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dto\ProdutoDto.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\dto\VendaDto.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\exceptions\ApiRequestException.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\exceptions\BusinessException.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\model\Cliente.java
@@ -16,6 +18,7 @@ C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\ja
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\relatorios\GerarRelatorio.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\Service\ClienteService.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\Service\ProdutoService.java
+C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\Service\VendaService.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\view\ViewConsultarVendas.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\view\ViewLancarVenda.java
 C:\Users\Marcelo\Documents\ADS\5Periodo\Prog. Desktop\PDV\PDVDesktop\src\main\java\view\ViewListarClientes.java
