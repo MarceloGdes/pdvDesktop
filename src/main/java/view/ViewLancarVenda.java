@@ -7,6 +7,9 @@ package view;
 import Service.ClienteService;
 import Service.ProdutoService;
 import Service.VendaService;
+import dao.ClienteDAO;
+import dao.ProdutoDAO;
+import dao.VendaDAO;
 import dto.VendaDto;
 import exceptions.ApiRequestException;
 import exceptions.BusinessException;
@@ -33,10 +36,18 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     private DefaultTableModel tableModel;
     private int linhaSelecionada = -1;
     
+    private ClienteDAO clienteDAO;
+    private ProdutoDAO produtoDAO;
+    private VendaDAO vendaDAO;
+    
     public ViewLancarVenda() {
         initComponents();
         venda = new Venda();
         carregarTabela();
+        
+        clienteDAO = new ClienteDAO();
+        produtoDAO = new ProdutoDAO();
+        vendaDAO = new VendaDAO();
     }
     
     private void carregarTabela() {
@@ -417,17 +428,24 @@ public class ViewLancarVenda extends javax.swing.JFrame {
 
         Venda vendaCriada = VendaService.insert(vendaDto);
         
+        if(clienteDAO.retornarPeloId(vendaCriada.getCliente().getId(), "cliente", "id") == null){
+            clienteDAO.salvar(vendaCriada.getCliente());
+        }
         
+        for(ItemVenda itemVenda : vendaCriada.getItensVenda()){
+            if(produtoDAO.retornarPeloId(itemVenda.getProduto().getId(), "produto", "id") == null){
+                produtoDAO.salvar(itemVenda.getProduto());
+            }
+        }
+        
+        if(vendaDAO.salvar(vendaCriada)){
+            JOptionPane.showMessageDialog(this, "Venda finalizada com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
+        }else{
+            
+        }
 
-        venda = new Venda();
-        atualizaGrid();
-        limparCamposProduto();
-        taObservacao.setText("");
-        tfSelecionarCliente.setText("");
-        tfTelefone.setText("");
-        tfEmail.setText("");
-
-        JOptionPane.showMessageDialog(this, "Venda finalizada com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+  
     } catch (BusinessException ex) {
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Atenção.", JOptionPane.WARNING_MESSAGE);
     } catch (Exception ex) {

@@ -281,6 +281,8 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
             
             LocalDate dataInicial = LocalDate.parse(dataInicialStr, formatter);
             LocalDate dataFinal = LocalDate.parse(dataFinalStr, formatter);
+            
+            
   
             if (dataInicial.isAfter(dataFinal)) {
                 JOptionPane.showMessageDialog(
@@ -293,7 +295,7 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
             
             // Gerar o relatório com filtro de data
             relatorios.GerarRelatorio gerador = new relatorios.GerarRelatorio();
-            gerador.gerarRelatorioComFiltroData("Relatorio_geral_pdv", dataInicialStr, dataFinalStr);
+            gerador.gerarRelatorioComFiltroData("Relatorio_geral_pdv", dataInicial.atStartOfDay(), dataFinal.atTime(23, 59, 59));
             
         } catch (java.time.format.DateTimeParseException e) {
             JOptionPane.showMessageDialog(
@@ -318,7 +320,7 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
                 try {
                     int idVenda = Integer.parseInt(input.trim());
                     relatorios.GerarRelatorio gerador = new relatorios.GerarRelatorio();
-                    gerador.gerarRelatorioComParametro("Relatorio_detalhado_pdv", idVenda, "Id_venda_parametro");
+                    gerador.gerarRelatorioComParametro("Relatorio_detalhado_pdv", idVenda, "venda_id_param");
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(
                             this,
@@ -334,7 +336,7 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
                 try {
                     int idVenda = Integer.parseInt(idObj.toString());
                     relatorios.GerarRelatorio gerador = new relatorios.GerarRelatorio();
-                    gerador.gerarRelatorioComParametro("Relatorio_detalhado_pdv", idVenda, "Id_venda_parametro");
+                    gerador.gerarRelatorioComParametro("Relatorio_detalhado_pdv", idVenda, "venda_id_param");
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(
                             this,

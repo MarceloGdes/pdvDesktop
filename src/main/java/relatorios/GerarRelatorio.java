@@ -3,6 +3,10 @@ package relatorios;
 import conexaoDB.ConexaoPostgres;
 import java.io.File;
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -57,7 +61,7 @@ public class GerarRelatorio {
         }
     }
 
-    public void gerarRelatorioComFiltroData(String nomeRelatorio, String dataInicial, String dataFinal) {
+    public void gerarRelatorioComFiltroData(String nomeRelatorio, LocalDateTime dataInicial, LocalDateTime dataFinal) {
         try {
 
             Connection conexao = ConexaoPostgres.getConnection();
@@ -73,16 +77,16 @@ public class GerarRelatorio {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
+            
+//            Date dataInicioSql = java.sql.Date.valueOf(dataInicial); 
+//            Date dataFimSql = java.sql.Date.valueOf(dataFinal);
 
             Map<String, Object> parametros = new HashMap<>();
-            parametros.put("DATA_INICIAL", dataInicial + " 00:00:00");
-            parametros.put("DATA_FINAL", dataFinal + " 23:59:59");
-
+            parametros.put("data_inicio_param", Timestamp.valueOf(dataInicial) );
+            parametros.put("data_fim_param", Timestamp.valueOf(dataFinal));
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(
                     caminhoRelatorio, parametros, conexao);
-
 
             JasperViewer viewer = new JasperViewer(jasperPrint, false);
             viewer.setTitle("Relatório - " + nomeRelatorio + " - Período: " + dataInicial + " a " + dataFinal);
