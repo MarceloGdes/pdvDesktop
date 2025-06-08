@@ -133,6 +133,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Gerar Relat&#xf3;rio Detalhado"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGerarRelatorioDetalhadoActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnGerarRelatorioVenda">
       <Properties>
@@ -141,6 +144,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Gerar Relat&#xf3;rio Vendas"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGerarRelatorioVendaActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextField1">
     </Component>
