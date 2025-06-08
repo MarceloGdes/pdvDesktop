@@ -134,7 +134,7 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
         jFormattedTextField2 = new javax.swing.JFormattedTextField();
         btnFiltrar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tbVendas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -165,7 +165,7 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
         jLabel1.setText("Dt. Lançamento Inicial");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setText("Dt lançamento final");
+        jLabel2.setText("Dt lançamento Final");
 
         jFormattedTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

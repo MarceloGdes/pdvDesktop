@@ -406,9 +406,7 @@ public class ViewLancarVenda extends javax.swing.JFrame {
             venda.setObservacao(taObservacao.getText());
             
             venda.setData(Date.valueOf(LocalDate.now()));
-            
-            if(vendaDa)
-                
+                            
         }catch (BusinessException ex) {
             JOptionPane.showMessageDialog(this, 
                         ex.getMessage(), 
