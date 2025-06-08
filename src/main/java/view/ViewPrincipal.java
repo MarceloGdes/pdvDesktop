@@ -70,6 +70,11 @@ public class ViewPrincipal extends javax.swing.JFrame {
         jMenu2.add(jMenuItem3);
 
         jMenuItem4.setText("Consultar Vendas");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem4);
 
         jMenuBar1.add(jMenu2);
@@ -96,6 +101,14 @@ public class ViewPrincipal extends javax.swing.JFrame {
         viewLancarVenda.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+       
+        ViewConsultarVendas viewConsultarVendas = new ViewConsultarVendas();
+        viewConsultarVendas.setLocationRelativeTo(this);
+        viewConsultarVendas.setVisible(true);
+    
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+   
     /**
      * @param args the command line arguments
      */

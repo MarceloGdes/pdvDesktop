@@ -1,6 +1,7 @@
 view\ViewLancarVenda$2.class
 view\ViewLancarVenda.class
 view\ViewConsultarVendas$2.class
+view\ViewPrincipal$3.class
 Service\ClienteService.class
 Service\ProdutoService.class
 view\ViewListarProdutos$1.class
@@ -14,6 +15,7 @@ view\ViewListarProdutos.class
 view\ViewConsultarVendas.class
 view\ViewLancarVenda$6.class
 dto\ProdutoDto.class
+view\ViewConsultarVendas$5.class
 conexaoDB\ConexaoPostgres.class
 dto\ClienteDTO.class
 view\ViewListarClientes.class
@@ -29,6 +31,7 @@ view\ViewLancarVenda$1.class
 view\ViewConsultarVendas$3.class
 view\ViewPrincipal$2.class
 view\ViewLancarVenda$5.class
+view\ViewConsultarVendas$4.class
 view\ViewLancarVenda$4.class
 view\ViewListarClientes$2.class
 relatorios\GerarRelatorio.class

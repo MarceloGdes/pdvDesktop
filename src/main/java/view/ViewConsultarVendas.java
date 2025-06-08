@@ -7,6 +7,7 @@ package view;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.text.MaskFormatter;
 
 /**
@@ -25,7 +26,7 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
 //codigo para o formato das datas dd/mm/yyyy
     private void configurarCamposData() {
     try {
-        //mascara do formato padrão
+    
       MaskFormatter mascaraData = new MaskFormatter("##/##/####");
       mascaraData.setPlaceholderCharacter('_'); 
         
@@ -73,9 +74,19 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
 
         btnGerarRelatorioDetalhado.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnGerarRelatorioDetalhado.setText("Gerar Relatório Detalhado");
+        btnGerarRelatorioDetalhado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGerarRelatorioDetalhadoActionPerformed(evt);
+            }
+        });
 
         btnGerarRelatorioVenda.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnGerarRelatorioVenda.setText("Gerar Relatório Vendas");
+        btnGerarRelatorioVenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGerarRelatorioVendaActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setText("Data de Lançamento Inicial");
@@ -171,6 +182,92 @@ public class ViewConsultarVendas extends javax.swing.JFrame {
     private void jFormattedTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jFormattedTextField2ActionPerformed
+
+    private void btnGerarRelatorioVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGerarRelatorioVendaActionPerformed
+    
+        String dataInicialStr = jFormattedTextField1.getText();
+        String dataFinalStr = jFormattedTextField2.getText();
+        
+        
+        if (dataInicialStr.trim().replace("_", "").length() < 10 || 
+            dataFinalStr.trim().replace("_", "").length() < 10) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, preencha as datas inicial e final para gerar o relatório.",
+                    "Datas Incompletas",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        try {
+            java.time.format.DateTimeFormatter formatter =
+                java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            java.time.LocalDate dataInicial = 
+                java.time.LocalDate.parse(dataInicialStr, formatter);
+            java.time.LocalDate dataFinal =
+                java.time.LocalDate.parse(dataFinalStr, formatter);
+  
+            if (dataInicial.isAfter(dataFinal)) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "A data inicial não pode ser posterior à data final.",
+                        "Erro de Data",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Gerar o relatório com filtro de data
+            relatorios.GerarRelatorio gerador = new relatorios.GerarRelatorio();
+            gerador.gerarRelatorioComFiltroData("Relatorio_geral_pdv", dataInicialStr, dataFinalStr);
+            
+        } catch (java.time.format.DateTimeParseException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Formato de data inválido. Use dd/MM/yyyy.",
+                    "Erro de Data",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnGerarRelatorioVendaActionPerformed
+
+    private void btnGerarRelatorioDetalhadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGerarRelatorioDetalhadoActionPerformed
+        int linhaSelecionada = TabelaCliente.getSelectedRow();
+        if (linhaSelecionada == -1) {
+           
+            String input = JOptionPane.showInputDialog(
+                    this,
+                    "Digite o ID da venda para o relatório detalhado:",
+                    "Relatório Detalhado",
+                    JOptionPane.QUESTION_MESSAGE);
+            
+            if (input != null && !input.trim().isEmpty()) {
+                try {
+                    int idVenda = Integer.parseInt(input.trim());
+                    relatorios.GerarRelatorio gerador = new relatorios.GerarRelatorio();
+                    gerador.gerarRelatorioComParametro("Relatorio_detalhado_pdv", idVenda, "Id_venda_parametro");
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Por favor, digite um número válido.",
+                            "Erro",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            // Se houver linha selecionada, usar o ID da venda selecionada
+            Object idObj = TabelaCliente.getValueAt(linhaSelecionada, 0);
+            if (idObj != null) {
+                try {
+                    int idVenda = Integer.parseInt(idObj.toString());
+                    relatorios.GerarRelatorio gerador = new relatorios.GerarRelatorio();
+                    gerador.gerarRelatorioComParametro("Relatorio_detalhado_pdv", idVenda, "Id_venda_parametro");
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Erro ao obter o ID da venda selecionada.",
+                            "Erro",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_btnGerarRelatorioDetalhadoActionPerformed
 
     /**
      * @param args the command line arguments
