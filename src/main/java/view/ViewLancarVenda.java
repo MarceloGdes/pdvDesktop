@@ -7,9 +7,6 @@ package view;
 import Service.ClienteService;
 import Service.ProdutoService;
 import Service.VendaService;
-import dao.ClienteDAO;
-import dao.ProdutoDAO;
-import dao.VendaDAO;
 import dto.VendaDto;
 import exceptions.ApiRequestException;
 import exceptions.BusinessException;
@@ -35,21 +32,13 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     private ItemVenda itemVenda = null;
     private DefaultTableModel tableModel;
     private int linhaSelecionada = -1;
-    
-    private ClienteDAO clienteDAO;
-    private ProdutoDAO produtoDAO;
-    private VendaDAO vendaDAO;
-    
+
     public ViewLancarVenda() {
         initComponents();
         venda = new Venda();
         carregarTabela();
-        
-        clienteDAO = new ClienteDAO();
-        produtoDAO = new ProdutoDAO();
-        vendaDAO = new VendaDAO();
     }
-    
+
     private void carregarTabela() {
         try {
             tableModel = new DefaultTableModel(
@@ -61,21 +50,21 @@ public class ViewLancarVenda extends javax.swing.JFrame {
                     return false;
                 }
             };
-            
+
             tbProdutos.setModel(tableModel);
-            
+
             tbProdutos.getColumnModel()
                     .getColumn(0)
                     .setPreferredWidth(1);
-            
+
             tbProdutos.getColumnModel()
                     .getColumn(1)
                     .setPreferredWidth(300);
-            
+
             tbProdutos.getColumnModel()
                     .getColumn(2)
                     .setPreferredWidth(1);
-            
+
             tbProdutos.getColumnModel()
                     .getColumn(3)
                     .setPreferredWidth(20);
@@ -367,17 +356,20 @@ public class ViewLancarVenda extends javax.swing.JFrame {
 
     private void btnAdicionarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarItemActionPerformed
         try {
-            if(itemVenda == null)
+            if (itemVenda == null) {
                 throw new BusinessException("Você não selecionou um produto.");
+            }
 
-            if(tfQuantidade.getText() == null || tfQuantidade.getText().isBlank())
+            if (tfQuantidade.getText() == null || tfQuantidade.getText().isBlank()) {
                 throw new BusinessException("Você não preencheu o campo de quantidade.");
-            
+            }
+
             Integer quantidade = Integer.valueOf(tfQuantidade.getText());
-            
-            if(quantidade <= 0)
+
+            if (quantidade <= 0) {
                 throw new BusinessException("A quantidade tem que ser maior que zero.");
-            
+            }
+
             itemVenda.setQuantidade(quantidade);
             itemVenda.calcValorTotal();
             
@@ -395,13 +387,13 @@ public class ViewLancarVenda extends javax.swing.JFrame {
         }catch (Exception ex) {
             Logger.getLogger(this.getClass().getName())
                     .log(Level.SEVERE, null, ex);
-            
-            JOptionPane.showMessageDialog(this, 
-                        "Ocorre um erro.", 
-                        "Erro", 
-                        JOptionPane.ERROR_MESSAGE);
+
+            JOptionPane.showMessageDialog(this,
+                    "Ocorre um erro.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_btnAdicionarItemActionPerformed
 
     private void tfValorTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfValorTotalActionPerformed
@@ -410,48 +402,38 @@ public class ViewLancarVenda extends javax.swing.JFrame {
 
     private void btnFinalizarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarVendaActionPerformed
         try {
-        if (venda.getCliente() == null)
-            throw new BusinessException("Você não selecionou um cliente.");
-        if (venda.getItensVenda().isEmpty())
-            throw new BusinessException("Adicione ao menos um item.");
-        
-        venda.setObservacao(taObservacao.getText());
-        venda.setData(Date.valueOf(LocalDate.now()));
-        venda.calcValorTotal(); // Garante que total é calculado
-
-        VendaDto vendaDto = new VendaDto();
-        vendaDto.setObservacao(venda.getObservacao());
-        vendaDto.setData(venda.getData());
-        vendaDto.setTotal(venda.getTotal());
-        vendaDto.setClienteId(venda.getCliente().getId());
-        vendaDto.setItensVenda(venda.getItensVenda());
-
-        Venda vendaCriada = VendaService.insert(vendaDto);
-        
-        if(clienteDAO.retornarPeloId(vendaCriada.getCliente().getId(), "cliente", "id") == null){
-            clienteDAO.salvar(vendaCriada.getCliente());
-        }
-        
-        for(ItemVenda itemVenda : vendaCriada.getItensVenda()){
-            if(produtoDAO.retornarPeloId(itemVenda.getProduto().getId(), "produto", "id") == null){
-                produtoDAO.salvar(itemVenda.getProduto());
+            if (venda.getCliente() == null || venda.getCliente().getId() == null) {
+                throw new BusinessException("Você não selecionou um cliente válido.");
             }
-        }
-        
-        if(vendaDAO.salvar(vendaCriada)){
+            if (venda.getItensVenda().isEmpty()) {
+                throw new BusinessException("Adicione ao menos um item.");
+            }
+
+            venda.setObservacao(taObservacao.getText());
+            venda.setData(Date.valueOf(LocalDate.now()));
+            venda.calcValorTotal();
+
+            VendaDto vendaDto = new VendaDto();
+            vendaDto.setObservacao(venda.getObservacao());
+            vendaDto.setData(venda.getData());
+            vendaDto.setTotal(venda.getTotal());
+            vendaDto.setClienteId(venda.getCliente().getId());
+            vendaDto.setItensVenda(venda.getItensVenda());
+
+            VendaService.insert(vendaDto);
+
+            atualizaGrid();
+            limparCamposProduto();
             JOptionPane.showMessageDialog(this, "Venda finalizada com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             dispose();
-        }else{
-            
-        }
 
-  
-    } catch (BusinessException ex) {
-        JOptionPane.showMessageDialog(this, ex.getMessage(), "Atenção.", JOptionPane.WARNING_MESSAGE);
-    } catch (Exception ex) {
-        Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-        JOptionPane.showMessageDialog(this, "Ocorre um erro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-    }
+        } catch (BusinessException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Atenção.", JOptionPane.WARNING_MESSAGE);
+
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Ocorre um erro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnFinalizarVendaActionPerformed
 
     private void tfSelecionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfSelecionarClienteActionPerformed
@@ -468,23 +450,23 @@ public class ViewLancarVenda extends javax.swing.JFrame {
 
     private void tfSelecionarClienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfSelecionarClienteKeyPressed
         // Código de busca de clientes
-        
-        if(evt.getKeyCode() == evt.VK_ENTER){
-            try{
+
+        if (evt.getKeyCode() == evt.VK_ENTER) {
+            try {
                 List<Cliente> clientes = ClienteService
                         .findAll(tfSelecionarCliente.getText());
-                
+
                 ViewListarClientes viewListarClientes = new ViewListarClientes(clientes, this);
                 viewListarClientes.setLocationRelativeTo(this);
                 viewListarClientes.setVisible(true);
-            
-            }catch (ApiRequestException ex) {
-                JOptionPane.showMessageDialog(this, 
+
+            } catch (ApiRequestException ex) {
+                JOptionPane.showMessageDialog(this,
                         ex.getMessage(),
                         "Atenção!",
                         JOptionPane.WARNING_MESSAGE);
-                
-            }catch (Exception ex) {
+
+            } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName())
                         .log(Level.SEVERE, null, ex);
             }
@@ -493,23 +475,23 @@ public class ViewLancarVenda extends javax.swing.JFrame {
 
     private void tfSelecionarProdutoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfSelecionarProdutoKeyPressed
         // Código de busca de clientes
-        
-        if(evt.getKeyCode() == evt.VK_ENTER){
-            try{
+
+        if (evt.getKeyCode() == evt.VK_ENTER) {
+            try {
                 List<Produto> produtos = ProdutoService
                         .findAll(tfSelecionarProduto.getText());
                 
                 ViewListarProdutos viewListarProdutos = new ViewListarProdutos(produtos, this);
                 viewListarProdutos.setLocationRelativeTo(this);
                 viewListarProdutos.setVisible(true);
-            
-            }catch (ApiRequestException ex) {
-                JOptionPane.showMessageDialog(this, 
+
+            } catch (ApiRequestException ex) {
+                JOptionPane.showMessageDialog(this,
                         ex.getMessage(),
                         "Atenção!",
                         JOptionPane.WARNING_MESSAGE);
-                
-            }catch (Exception ex) {
+
+            } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName())
                         .log(Level.SEVERE, null, ex);
             }
@@ -518,8 +500,8 @@ public class ViewLancarVenda extends javax.swing.JFrame {
 
     private void btnRemoverItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverItemActionPerformed
         linhaSelecionada = tbProdutos.getSelectedRow();
-        
-        if(linhaSelecionada >= 0){
+
+        if (linhaSelecionada >= 0) {
             venda.getItensVenda().remove(linhaSelecionada);
             
             atualizaGrid();
@@ -528,31 +510,31 @@ public class ViewLancarVenda extends javax.swing.JFrame {
                 "Item removido com sucesso.",
                 "Remoção",
                 JOptionPane.INFORMATION_MESSAGE);
-            
+
             linhaSelecionada = -1;
-            
-        }else {
-            JOptionPane.showMessageDialog(this, 
-                    "Selecione um item da tabela.", 
-                    "Atenção", 
+
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Selecione um item da tabela.",
+                    "Atenção",
                     JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnRemoverItemActionPerformed
-    
-    public void preencherDadosCliente(Cliente cliente){
+
+    public void preencherDadosCliente(Cliente cliente) {
         venda.setCliente(cliente);
         
         tfSelecionarCliente.setText(cliente.getId() + " - " + cliente.getNome());
         tfTelefone.setText(cliente.getTelefone());
         tfEmail.setText(cliente.getEmail());  
     }
-    
-    public void preencherDadosProdutos(Produto produto){
-          tfSelecionarProduto.setText(produto.getId() + " - " + produto.getDescricao());
-    itemVenda = new ItemVenda();
-    itemVenda.setProduto(produto);
-    itemVenda.setProduto(produto);
-    itemVenda.setValorUnitario(produto.getValor());
+
+    public void preencherDadosProdutos(Produto produto) {
+        tfSelecionarProduto.setText(produto.getId() + " - " + produto.getDescricao());
+        itemVenda = new ItemVenda();
+        itemVenda.setProduto(produto);
+        itemVenda.setProduto(produto);
+        itemVenda.setValorUnitario(produto.getValor());
     }
     
 
@@ -581,7 +563,4 @@ public class ViewLancarVenda extends javax.swing.JFrame {
     private javax.swing.JLabel txtTelaVendas;
     // End of variables declaration//GEN-END:variables
 
-    
-
-    
 }

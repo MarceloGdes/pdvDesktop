@@ -5,7 +5,6 @@
 package com.mycompany.pdvdesktop;
 
 import javax.swing.JFrame;
-import view.ViewConsultarVendas;
 import view.ViewPrincipal;
 /**
  *
@@ -14,10 +13,8 @@ import view.ViewPrincipal;
 public class PDVDesktop {
 
     public static void main(String[] args) {
-        ViewPrincipal view = new ViewPrincipal();;
+        ViewPrincipal view = new ViewPrincipal();
         view.setExtendedState(JFrame.MAXIMIZED_BOTH);
         view.setVisible(true);       
-
-        //new ViewConsultarVendas().setVisible(true);
     }
 }
